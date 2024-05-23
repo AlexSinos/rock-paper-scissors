@@ -44,7 +44,7 @@ function startGame() {
 }
 
 function gameLoop() {
-    
+    setTimeout(() => {
     if (computerScore === 3) {alert(`
     You lose! Straight to hell with Pinky!`)
     }
@@ -55,8 +55,9 @@ function gameLoop() {
         let humanChoice = prompt(`Well, wipe your tears away and when you're ready give me your answer.. rock, paper or scissors?`);
         humanChoice = humanChoice.toLowerCase();
         game(humanChoice, computerChoice);
-        playAgain();
-}
+        gameLoop();
+    
+}}, 2000)
 }
 
 function game(humanChoice, computerChoice) {
@@ -86,7 +87,7 @@ function game(humanChoice, computerChoice) {
     updateScores();
 }
 
-function playAgain() {
+/*function playAgain() {
     setTimeout(() => {
     let answer = prompt(`Ready for the next round?`);
     answer = answer.toLowerCase();
@@ -94,7 +95,7 @@ function playAgain() {
     yesAnswers.includes(answer) ? gameLoop() : alert("farewell")
 }, 2000)
 }
-
+*/
 function getComputerChoice() {
     let value = Math.random();
     if (value <= 0.33) {
