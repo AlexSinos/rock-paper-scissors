@@ -107,4 +107,7 @@ function getComputerChoice() {
     }
 }
 
-startButton.addEventListener('click', startGame);
+startButton.addEventListener('click', () => {
+    startButton.remove();
+    startGame();
+});
