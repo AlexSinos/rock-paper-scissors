@@ -5,6 +5,8 @@ body {
   height: 100vh;
   margin: 0;
   background-image: url("./images/room.jpg");
+  flex-direction: column;
+  gap: 100px;
 }
 button {
   padding: 15px 30px;
@@ -13,4 +15,16 @@ button {
   color: #fff;
   background-color: grey;
   background: linear-gradient(135deg, #680202, #000000);
+}
+.scores {
+  display: flex;
+  color: #fff;
+  font-size: 64px;
+  gap: 200px;
+}
+.left,
+.right {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
