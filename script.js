@@ -2,11 +2,12 @@ const startButton = document.getElementById('startbutton');
 let computerScore = 0;
 let humanScore = 0;
 let name = '';
+let capitalisedName = '';
 
 function updateScores() {
     document.querySelector('.computer-score').innerHTML = computerScore;
     document.querySelector('.human-score').innerHTML = humanScore;
-    document.querySelector('.human-score-title').innerHTML = name;
+    document.querySelector('.human-score-title').innerHTML = capitalisedName;
     document.querySelector('.computer-score-title').innerHTML = 'Death';
 }
 
@@ -22,7 +23,8 @@ function startGame() {
             alert(`You can't remember? That's embarrassing!`);
             name = 'Player';
         } else {
-            alert(`${name}? What kind of amazing name is that?`);
+            capitalisedName = name.charAt(0).toUpperCase() + name.slice(1);
+            alert(`${capitalisedName}? What kind of amazing name is that?`);
         }
         alert(`Listen, I don't really care anyway. I'm guessing you've already got an idea of what's going on here, right?`);
         const laugh = document.getElementById("laugh");
@@ -38,7 +40,7 @@ function startGame() {
                 alert(`All it really comes down to is if you can beat me in a game of rock, paper, scissors. Funny right?`);
                 alert(`Best of 5, if you win you go to heaven, if you lose you go to hell`);
                 gameLoop();
-            }, 3);
+            }, 100);
         }, 2000);
     }, 6000);
 }
@@ -54,15 +56,17 @@ function gameLoop() {
         let computerChoice = getComputerChoice();
         let humanChoice = prompt(`Well, wipe your tears away and when you're ready give me your answer.. rock, paper or scissors?`);
         humanChoice = humanChoice.toLowerCase();
+        
         game(humanChoice, computerChoice);
         gameLoop();
-    
-}}, 2000)
+}}, 1500)
 }
 
+
 function game(humanChoice, computerChoice) {
+    let humanChoiceCapitalised = humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1);
     if (humanChoice === computerChoice) {
-        alert(`${humanChoice}? I have ${computerChoice}. That's a draw! 
+        alert(`${humanChoiceCapitalised}? I have ${computerChoice}. That's a draw! 
         ${humanScore} : ${computerScore}`);
     } else if (
         (humanChoice === 'scissors' && computerChoice === 'rock') ||
@@ -70,7 +74,7 @@ function game(humanChoice, computerChoice) {
         (humanChoice === 'paper' && computerChoice === 'scissors')
     ) {
         computerScore++;
-        alert(`${humanChoice}? I have ${computerChoice}. 
+        alert(`${humanChoiceCapitalised}? I have ${computerChoice}. 
         ${humanScore} : ${computerScore}`);
     } else if (
         (humanChoice === 'scissors' && computerChoice === 'paper') ||
@@ -78,7 +82,7 @@ function game(humanChoice, computerChoice) {
         (humanChoice === 'paper' && computerChoice === 'rock')
     ) {
         humanScore++
-        alert(`${humanChoice}? I have ${computerChoice}.
+        alert(`${humanChoiceCapitalised}? I have ${computerChoice}.
         ${humanScore} : ${computerScore}`);
         ;
     } else {
@@ -111,3 +115,5 @@ startButton.addEventListener('click', () => {
     startButton.remove();
     startGame();
 });
+
+
