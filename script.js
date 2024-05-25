@@ -4,14 +4,14 @@ let humanScore = 0;
 let name = '';
 let capitalisedName = '';
 
-function updateScores() {
+const updateScores = () => {
     document.querySelector('.computer-score').innerHTML = computerScore;
     document.querySelector('.human-score').innerHTML = humanScore;
     document.querySelector('.human-score-title').innerHTML = capitalisedName;
     document.querySelector('.computer-score-title').innerHTML = 'Death';
 }
 
-function startGame() {
+const startGame = () => {
     const music = document.getElementById("music");
     music.play();
     setTimeout(() => {
@@ -45,7 +45,7 @@ function startGame() {
     }, 6000);
 }
 
-function gameLoop() {
+const gameLoop = () => {
     setTimeout(() => {
     if (computerScore === 3) {alert(`
     You lose! Straight to hell with Pinky!`)
@@ -63,7 +63,7 @@ function gameLoop() {
 }
 
 
-function game(humanChoice, computerChoice) {
+const game = (humanChoice, computerChoice) => {
     let humanChoiceCapitalised = humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1);
     if (humanChoice === computerChoice) {
         alert(`${humanChoiceCapitalised}? I have ${computerChoice}. That's a draw! 
@@ -91,15 +91,6 @@ function game(humanChoice, computerChoice) {
     updateScores();
 }
 
-/*function playAgain() {
-    setTimeout(() => {
-    let answer = prompt(`Ready for the next round?`);
-    answer = answer.toLowerCase();
-    const yesAnswers = ['yeah', 'yes', 'yep', 'okay', 'yeap', 'ok', 'tak', 'fine', 'si', 'whatever', 'w/e', 'nai', '', 'go', 'one more', 'if i have to'];
-    yesAnswers.includes(answer) ? gameLoop() : alert("farewell")
-}, 2000)
-}
-*/
 function getComputerChoice() {
     let value = Math.random();
     if (value <= 0.33) {
