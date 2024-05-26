@@ -4,13 +4,6 @@ let humanScore = 0;
 let name = '';
 let capitalisedName = '';
 
-const updateScores = () => {
-    document.querySelector('.computer-score').innerHTML = computerScore;
-    document.querySelector('.human-score').innerHTML = humanScore;
-    document.querySelector('.human-score-title').innerHTML = capitalisedName;
-    document.querySelector('.computer-score-title').innerHTML = 'Death';
-}
-
 const startGame = () => {
     const music = document.getElementById("music");
     music.play();
@@ -20,7 +13,7 @@ const startGame = () => {
         alert(`I was getting worried I'd have to call an ambulance or something.`);
         name = prompt(`...Anyway, I read your file but I can't seem to remember... what's your name again?`);
         if (!name) {
-            alert(`You can't remember? That's embarrassing!`);
+            alert(`You can't remember? That's embarrassing! I'll call you Player`);
             name = 'Player';
         } else {
             capitalisedName = name.charAt(0).toUpperCase() + name.slice(1);
@@ -45,23 +38,18 @@ const startGame = () => {
     }, 6000);
 }
 
-const gameLoop = () => {
+const checkGameEnd = () => {
     setTimeout(() => {
-    if (computerScore === 3) {alert(`
-    You lose! Straight to hell with Pinky!`)
-    }
-    else if (humanScore === 3) {alert(`Okay, okay. You win, you can go to heaven with Gucio`
-    )}
-    else {
+    computerScore === 3 ? alert(` You lose! Straight to hell with Pinky!`) : humanScore === 3 ? alert(`Okay, okay. You win, you can go to heaven with Gucio`) : gameLoop()
+    }, 1000)}
+
+const gameLoop = () => {
         let computerChoice = getComputerChoice();
         let humanChoice = prompt(`Well, wipe your tears away and when you're ready give me your answer.. rock, paper or scissors?`);
         humanChoice = humanChoice.toLowerCase();
-        
         game(humanChoice, computerChoice);
-        gameLoop();
-}}, 1500)
+        checkGameEnd()
 }
-
 
 const game = (humanChoice, computerChoice) => {
     let humanChoiceCapitalised = humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1);
@@ -91,15 +79,16 @@ const game = (humanChoice, computerChoice) => {
     updateScores();
 }
 
+const updateScores = () => {
+    document.querySelector('.computer-score').innerHTML = computerScore;
+    document.querySelector('.human-score').innerHTML = humanScore;
+    document.querySelector('.human-score-title').innerHTML = capitalisedName;
+    document.querySelector('.computer-score-title').innerHTML = 'Death';
+}
+
 function getComputerChoice() {
     let value = Math.random();
-    if (value <= 0.33) {
-        return "scissors";
-    } else if (value <= 0.66) {
-        return "rock";
-    } else {
-        return "paper";
-    }
+    return (value <= 0.33) ? "scissors" : (value <= 0.66) ? "rock" : "paper"; 
 }
 
 startButton.addEventListener('click', () => {
