@@ -28,3 +28,18 @@ button {
   align-items: center;
   flex-direction: column;
 }
+.text-box {
+  background-color: floralwhite;
+  border: dotted red;
+  height: 40px;
+  width: 40vh;
+  font-weight: 700;
+}
+.continue-button {
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  background-color: grey;
+  background: linear-gradient(135deg, #680202, #000000);
+}

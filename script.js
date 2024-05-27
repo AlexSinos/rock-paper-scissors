@@ -1,43 +1,59 @@
-const startButton = document.getElementById('startbutton');
+const startButton = document.getElementById('start-button');
+const script = document.getElementById('script')
 let computerScore = 0;
 let humanScore = 0;
+let position = 0;
 let name = '';
 let capitalisedName = '';
+let dialogueArray = [
+    '. . . ',
+    `You're finally awake!`,
+    `I was getting worried I'd have to call an ambulance or something.`,
+    `...Anyway, I read your file but I can't seem to remember... what's your name again?`,
+    `You can't remember? That's embarrassing! I'll call you Player`,
+    `Listen, I don't really care anyway. I'm guessing you've already got an idea of what's going on here, right?`,
+    `You died, dummy.`,
+    `And not only that, but you left me to clean up the mess. Ugh!`,
+    `You're probably curious as to what happened.`,
+    `You were trying to eat a pomelo fruit and got a bit too excited and choked to death. Yeesh!`,
+    `I always find it hilarious how you earthlings think your good deeds will decide your fate in the afterlife.`,
+    `I know you devoted your life to saving homeless animals but unfortunately it will have no impact here.`,
+    `All it really comes down to is if you can beat me in a game of rock, paper, scissors. Funny right?`,
+    `Best of 5, if you win you go to heaven, if you lose you go to hell`
+];
+
+const createChatBox = () => {
+    const container = document.querySelector(".main")
+    const textBox = document.createElement("div")
+    textBox.classList.add("text-box")
+    container.appendChild(textBox);
+    return textBox;
+}
+const createContinueButton = () => {
+    const container = document.querySelector(".main")
+    const continueButton = document.createElement("button")
+    continueButton.classList.add("continue-button")
+    container.appendChild(continueButton)
+    continueButton.textContent = "Continue"
+    return continueButton; 
+}
+
 
 const startGame = () => {
     const music = document.getElementById("music");
     music.play();
     setTimeout(() => {
-        alert('. . . ');
-        alert(`You're finally awake!`);
-        alert(`I was getting worried I'd have to call an ambulance or something.`);
-        name = prompt(`...Anyway, I read your file but I can't seem to remember... what's your name again?`);
-        if (!name) {
-            alert(`You can't remember? That's embarrassing! I'll call you Player`);
-            name = 'Player';
-        } else {
-            capitalisedName = name.charAt(0).toUpperCase() + name.slice(1);
-            alert(`${capitalisedName}? What kind of amazing name is that?`);
-        }
-        alert(`Listen, I don't really care anyway. I'm guessing you've already got an idea of what's going on here, right?`);
+        const textBox = createChatBox()
+        const continueButton = createContinueButton()
+        continueButton.addEventListener('click', () => {
+            textBox.textContent = dialogueArray[position]
+            position++
+            })
         const laugh = document.getElementById("laugh");
         laugh.play();
-        setTimeout(() => {
-            alert(`You died, dummy.`);
-            alert(`And not only that, but you left me to clean up the mess. Ugh!`);
-            alert(`You're probably curious as to what happened.`);
-            alert(`You were trying to eat a pomelo fruit and got a bit too excited and choked to death. Yeesh!`);
-            setTimeout(() => {
-                alert(`I always find it hilarious how you earthlings think your good deeds will decide your fate in the afterlife.`);
-                alert(`I know you devoted your life to saving homeless animals but unfortunately it will have no impact here.`);
-                alert(`All it really comes down to is if you can beat me in a game of rock, paper, scissors. Funny right?`);
-                alert(`Best of 5, if you win you go to heaven, if you lose you go to hell`);
-                gameLoop();
+        
             }, 100);
-        }, 2000);
-    }, 6000);
-}
-
+        }
 const checkGameEnd = () => {
     setTimeout(() => {
     computerScore === 3 ? alert(` You lose! Straight to hell with Pinky!`) : humanScore === 3 ? alert(`Okay, okay. You win, you can go to heaven with Gucio`) : gameLoop()
