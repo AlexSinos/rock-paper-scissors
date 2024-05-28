@@ -1,10 +1,10 @@
 const startButton = document.getElementById('start-button');
-const script = document.getElementById('script')
+const script = document.getElementById('script');
+const input = document.createElement("input");
 let computerScore = 0;
 let humanScore = 0;
 let position = 0;
 let name = '';
-let capitalisedName = '';
 let dialogueArray = [
     '. . . ',
     `You're finally awake!`,
@@ -21,86 +21,135 @@ let dialogueArray = [
     `All it really comes down to is if you can beat me in a game of rock, paper, scissors. Funny right?`,
     `Best of 5, if you win you go to heaven, if you lose you go to hell`
 ];
-
+const laugh = document.getElementById("laugh");
+const container = document.querySelector(".main");
+const textBox = document.querySelector(".text-box");
+const continueButton = document.querySelector("button");
 const createChatBox = () => {
-    const container = document.querySelector(".main")
-    const textBox = document.createElement("div")
-    textBox.classList.add("text-box")
+    const textBox = document.createElement("div");
+    textBox.classList.add("text-box");
     container.appendChild(textBox);
     return textBox;
-}
-const createContinueButton = () => {
-    const container = document.querySelector(".main")
-    const continueButton = document.createElement("button")
-    continueButton.classList.add("continue-button")
-    container.appendChild(continueButton)
-    continueButton.textContent = "Continue"
-    return continueButton; 
-}
+};
 
+const createContinueButton = () => {
+    const continueButton = document.createElement("button");
+    continueButton.textContent = "Continue";
+    container.appendChild(continueButton);
+    return continueButton;
+};
+
+const advanceDialogue = (textBox, continueButton) => {
+    textBox.textContent = dialogueArray[position];
+    if (position === 6) {
+        laugh.play();
+    } else if (position === 3) {
+        container.appendChild(input);
+        continueButton.textContent = "Submit";
+        continueButton.onclick = () => {
+            name = input.value || 'Player';
+            input.remove();
+            continueButton.textContent = "Continue";
+            dialogueArray[4] = `${name}? Huh, who came up with a name like that?`;
+            position++;
+            advanceDialogue(textBox, continueButton);
+        };
+    } else {
+        continueButton.onclick = () => {
+            position++;
+            if (position < dialogueArray.length) {
+                advanceDialogue(textBox, continueButton);
+            } else {
+                gameLoop(); // Move game loop call here
+            }
+        };
+    }
+};
 
 const startGame = () => {
     const music = document.getElementById("music");
     music.play();
     setTimeout(() => {
-        const textBox = createChatBox()
-        const continueButton = createContinueButton()
-        continueButton.addEventListener('click', () => {
-            textBox.textContent = dialogueArray[position]
-            position++
-            })
-        const laugh = document.getElementById("laugh");
-        laugh.play();
-        
-            }, 100);
-        }
+        const textBox = createChatBox();
+        const continueButton = createContinueButton();
+        advanceDialogue(textBox, continueButton);
+    }, 100);
+};
+
 const checkGameEnd = () => {
+    console.log("Checking game end...");
+    console.log("Human Score:", humanScore, "Computer Score:", computerScore);
     setTimeout(() => {
-    computerScore === 3 ? alert(` You lose! Straight to hell with Pinky!`) : humanScore === 3 ? alert(`Okay, okay. You win, you can go to heaven with Gucio`) : gameLoop()
-    }, 1000)}
+        const textBox = document.querySelector(".text-box");
+        const continueButton = document.querySelector("button");
+        if (computerScore === 3) {
+            console.log("Computer wins!");
+            textBox.textContent =`You lose! Straight to hell with Pinky!`;
+        } else if (humanScore === 3) {
+            console.log("Human wins!");
+            textBox.textContent =`Okay, okay. You win, you can go to heaven with Gucio.`;
+        }
+        input.remove();
+        continueButton.remove();
+    }, 1000);}
 
 const gameLoop = () => {
-        let computerChoice = getComputerChoice();
-        let humanChoice = prompt(`Well, wipe your tears away and when you're ready give me your answer.. rock, paper or scissors?`);
-        humanChoice = humanChoice.toLowerCase();
-        game(humanChoice, computerChoice);
-        checkGameEnd()
-}
+    let computerChoice = getComputerChoice();
+    const textBox = document.querySelector(".text-box");
+    const continueButton = document.querySelector("button");
+    container.appendChild(input);
+    continueButton.onclick = () => { // Change event listener to onclick handler
+        let humanChoice = input.value.toLowerCase();
+        rockPaperScissors(humanChoice, computerChoice);
+    };
+};
 
-const game = (humanChoice, computerChoice) => {
-    let humanChoiceCapitalised = humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1);
+const rockPaperScissors = (humanChoice, computerChoice) => {
+    const textBox = document.querySelector(".text-box");
+    const continueButton = document.querySelector("button");
+    const humanChoiceCapitalised = humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1);
+
     if (humanChoice === computerChoice) {
-        alert(`${humanChoiceCapitalised}? I have ${computerChoice}. That's a draw! 
-        ${humanScore} : ${computerScore}`);
+        textBox.textContent = `${humanChoiceCapitalised}? I have ${computerChoice}. That's a draw! ${humanScore} : ${computerScore}`;
     } else if (
         (humanChoice === 'scissors' && computerChoice === 'rock') ||
         (humanChoice === 'rock' && computerChoice === 'paper') ||
         (humanChoice === 'paper' && computerChoice === 'scissors')
     ) {
         computerScore++;
-        alert(`${humanChoiceCapitalised}? I have ${computerChoice}. 
-        ${humanScore} : ${computerScore}`);
+        textBox.textContent = `${humanChoiceCapitalised}? I have ${computerChoice}. ${humanScore} : ${computerScore}`;
     } else if (
         (humanChoice === 'scissors' && computerChoice === 'paper') ||
         (humanChoice === 'rock' && computerChoice === 'scissors') ||
         (humanChoice === 'paper' && computerChoice === 'rock')
     ) {
-        humanScore++
-        alert(`${humanChoiceCapitalised}? I have ${computerChoice}.
-        ${humanScore} : ${computerScore}`);
-        ;
+        humanScore++;
+        textBox.textContent = `${humanChoiceCapitalised}? I have ${computerChoice}. ${humanScore} : ${computerScore}`;
     } else {
-        alert(`What on earth is a ${humanChoice}?`);
+        textBox.textContent = `What on earth is a ${humanChoice}?`;
     }
+
     updateScores();
-}
+
+    if (computerScore === 3 || humanScore === 3) {
+        checkGameEnd();
+    } else {
+        // If the game hasn't ended, proceed with the next round
+        gameLoop();
+    }
+};
+
+
 
 const updateScores = () => {
-    document.querySelector('.computer-score').innerHTML = computerScore;
-    document.querySelector('.human-score').innerHTML = humanScore;
-    document.querySelector('.human-score-title').innerHTML = capitalisedName;
-    document.querySelector('.computer-score-title').innerHTML = 'Death';
-}
+    console.log("Updating Scores...");
+    console.log("Previous Scores - Human:", humanScore, "Computer:", computerScore);
+    document.querySelector('.computer-score').textContent = computerScore;
+    document.querySelector('.human-score').textContent = humanScore;
+    document.querySelector('.human-score-title').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+    document.querySelector('.computer-score-title').textContent = 'Death';
+    console.log("Updated Scores - Human:", humanScore, "Computer:", computerScore);
+};
 
 function getComputerChoice() {
     let value = Math.random();
@@ -110,6 +159,4 @@ function getComputerChoice() {
 startButton.addEventListener('click', () => {
     startButton.remove();
     startGame();
-});
-
-
+})
