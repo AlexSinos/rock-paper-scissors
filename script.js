@@ -60,7 +60,7 @@ const advanceDialogue = (textBox, continueButton) => {
             if (position < dialogueArray.length) {
                 advanceDialogue(textBox, continueButton);
             } else {
-                gameLoop(); // Move game loop call here
+                gameLoop(); 
             }
         };
     }
@@ -98,7 +98,7 @@ const gameLoop = () => {
     const textBox = document.querySelector(".text-box");
     const continueButton = document.querySelector("button");
     container.appendChild(input);
-    continueButton.onclick = () => { // Change event listener to onclick handler
+    continueButton.onclick = () => { 
         let humanChoice = input.value.toLowerCase();
         rockPaperScissors(humanChoice, computerChoice);
     };
@@ -134,7 +134,6 @@ const rockPaperScissors = (humanChoice, computerChoice) => {
     if (computerScore === 3 || humanScore === 3) {
         checkGameEnd();
     } else {
-        // If the game hasn't ended, proceed with the next round
         gameLoop();
     }
 };
