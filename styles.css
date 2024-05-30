@@ -6,8 +6,9 @@ body {
   margin: 0;
   background-image: url("./images/room.jpg");
   flex-direction: column;
-  gap: 100px;
+  gap: 20px;
 }
+
 button {
   padding: 15px 30px;
   font-size: 18px;
@@ -16,25 +17,33 @@ button {
   background-color: grey;
   background: linear-gradient(135deg, #680202, #000000);
 }
+
 .scores {
   display: flex;
   color: #fff;
   font-size: 64px;
-  gap: 200px;
+  gap: 100px;
 }
+
 .left,
 .right {
   display: flex;
   align-items: center;
   flex-direction: column;
 }
+
 .text-box {
-  background-color: floralwhite;
+  background-color: rgb(224, 200, 150);
   border: dotted red;
-  height: 40px;
-  width: 40vh;
+  height: 80px;
+  max-width: 100%;
   font-weight: 700;
+  font-size: 23px;
+  display: flex;
+  align-items: center;
+  padding: 0px 20px;
 }
+
 .continue-button {
   padding: 15px 30px;
   font-size: 18px;

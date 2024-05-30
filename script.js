@@ -21,10 +21,10 @@ let dialogueArray = [
     `All it really comes down to is if you can beat me in a game of rock, paper, scissors. Funny right?`,
     `Best of 5, if you win you go to heaven, if you lose you go to hell`
 ];
-const laugh = document.getElementById("laugh");
+const laugh = document.querySelector("#laugh");
 const container = document.querySelector(".main");
-const textBox = document.querySelector(".text-box");
-const continueButton = document.querySelector("button");
+const speak = document.querySelector("#speak")
+
 const createChatBox = () => {
     const textBox = document.createElement("div");
     textBox.classList.add("text-box");
@@ -35,36 +35,63 @@ const createChatBox = () => {
 const createContinueButton = () => {
     const continueButton = document.createElement("button");
     continueButton.textContent = "Continue";
+    continueButton.style.display = 'none';
     container.appendChild(continueButton);
     return continueButton;
 };
 
 const advanceDialogue = (textBox, continueButton) => {
-    textBox.textContent = dialogueArray[position];
-    if (position === 6) {
-        laugh.play();
-    } else if (position === 3) {
-        container.appendChild(input);
-        continueButton.textContent = "Submit";
-        continueButton.onclick = () => {
-            name = input.value || 'Player';
-            input.remove();
-            continueButton.textContent = "Continue";
-            dialogueArray[4] = `${name}? Huh, who came up with a name like that?`;
-            position++;
-            advanceDialogue(textBox, continueButton);
-        };
-    } else {
+    let letter = 0;
+    textBox.textContent = ''; 
+
+    const typeWriter = () => {
+        if (letter < dialogueArray[position].length) {
+            speak.play()
+            textBox.textContent += dialogueArray[position].charAt(letter);
+            letter++;
+            setTimeout(typeWriter, 30);
+        } else {
+            showContinueButton(); 
+        }
+    };
+
+    const showContinueButton = () => {
+        if (position === 6) {
+            laugh.play();
+            setTimeout(() => {
+                continueButton.style.display = 'inline-block';
+            }, 4000);
+        } else {
+            continueButton.style.display = 'inline-block';
+        }
+
         continueButton.onclick = () => {
             position++;
             if (position < dialogueArray.length) {
                 advanceDialogue(textBox, continueButton);
             } else {
-                gameLoop(); 
+                gameLoop();
             }
         };
-    }
+
+        if (position === 3) {
+            continueButton.textContent = "Submit";
+            container.appendChild(input);
+            continueButton.onclick = () => {
+                name = input.value || 'Player';
+                input.remove();
+                continueButton.textContent = "Continue";
+                dialogueArray[4] = `${name}? Huh, who came up with a name like that?`;
+                position++;
+                advanceDialogue(textBox, continueButton);
+            };
+        }
+    };
+
+    continueButton.style.display = 'none';
+    typeWriter();
 };
+
 
 const startGame = () => {
     const music = document.getElementById("music");
@@ -73,25 +100,24 @@ const startGame = () => {
         const textBox = createChatBox();
         const continueButton = createContinueButton();
         advanceDialogue(textBox, continueButton);
-    }, 100);
+    }, 1000);
 };
 
 const checkGameEnd = () => {
-    console.log("Checking game end...");
-    console.log("Human Score:", humanScore, "Computer Score:", computerScore);
-    setTimeout(() => {
-        const textBox = document.querySelector(".text-box");
-        const continueButton = document.querySelector("button");
-        if (computerScore === 3) {
-            console.log("Computer wins!");
-            textBox.textContent =`You lose! Straight to hell with Pinky!`;
-        } else if (humanScore === 3) {
-            console.log("Human wins!");
-            textBox.textContent =`Okay, okay. You win, you can go to heaven with Gucio.`;
-        }
-        input.remove();
-        continueButton.remove();
-    }, 1000);}
+    const textBox = document.querySelector(".text-box");
+    const continueButton = document.querySelector("button");
+    const death = document.getElementById("death");
+    const heaven = document.getElementById("heaven");
+    if (computerScore >= 3) {
+        death.play();
+        textBox.textContent = `You lose! Straight to hell with Pinky!`;
+    } else if (humanScore >= 3) {
+        heaven.play();
+        textBox.textContent = `Okay, okay. You win, you can go to heaven with Gucio.`;
+    }
+    input.remove();
+    continueButton.remove();
+};
 
 const gameLoop = () => {
     let computerChoice = getComputerChoice();
@@ -108,34 +134,49 @@ const rockPaperScissors = (humanChoice, computerChoice) => {
     const textBox = document.querySelector(".text-box");
     const continueButton = document.querySelector("button");
     const humanChoiceCapitalised = humanChoice.charAt(0).toUpperCase() + humanChoice.slice(1);
+    const rattle = document.querySelector("#rattle");
+    rattle.play();
 
+
+    let resultText;
     if (humanChoice === computerChoice) {
-        textBox.textContent = `${humanChoiceCapitalised}? I have ${computerChoice}. That's a draw! ${humanScore} : ${computerScore}`;
+        resultText = `${humanChoiceCapitalised}? I have ${computerChoice}. That's a draw! ${humanScore} : ${computerScore}`;
     } else if (
         (humanChoice === 'scissors' && computerChoice === 'rock') ||
         (humanChoice === 'rock' && computerChoice === 'paper') ||
         (humanChoice === 'paper' && computerChoice === 'scissors')
     ) {
-        computerScore++;
-        textBox.textContent = `${humanChoiceCapitalised}? I have ${computerChoice}. ${humanScore} : ${computerScore}`;
+        resultText = `${humanChoiceCapitalised}? I have ${computerChoice}. ${humanScore} : ${++computerScore}`;
     } else if (
         (humanChoice === 'scissors' && computerChoice === 'paper') ||
         (humanChoice === 'rock' && computerChoice === 'scissors') ||
         (humanChoice === 'paper' && computerChoice === 'rock')
     ) {
-        humanScore++;
-        textBox.textContent = `${humanChoiceCapitalised}? I have ${computerChoice}. ${humanScore} : ${computerScore}`;
+        resultText = `${humanChoiceCapitalised}? I have ${computerChoice}. ${++humanScore} : ${computerScore}`;
     } else {
-        textBox.textContent = `What on earth is a ${humanChoice}?`;
+        resultText = `What on earth is a ${humanChoice}?`;
     }
 
-    updateScores();
+    let index = 0;
+    textBox.textContent = "";
+    const typeWriter = () => {
+        speak.play()
+        if (index < resultText.length) {
+            textBox.textContent += resultText.charAt(index);
+            index++;
+            setTimeout(typeWriter, 30); 
+        } else {
+            updateScores();
 
-    if (computerScore === 3 || humanScore === 3) {
-        checkGameEnd();
-    } else {
-        gameLoop();
-    }
+            if (computerScore === 3 || humanScore === 3) {
+                checkGameEnd();
+            } else {
+                gameLoop();
+            }
+        }
+    };
+
+    setTimeout(typeWriter, 2000);
 };
 
 
@@ -158,4 +199,4 @@ function getComputerChoice() {
 startButton.addEventListener('click', () => {
     startButton.remove();
     startGame();
-})
+});
