@@ -43,12 +43,7 @@ button {
   align-items: center;
   padding: 0px 20px;
 }
-
-.continue-button {
-  padding: 15px 30px;
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  background-color: grey;
-  background: linear-gradient(135deg, #680202, #000000);
+.button {
+  display: flex;
+  flex-direction: column;
 }
